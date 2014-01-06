@@ -30,11 +30,25 @@ object World {
 
   def yesNo = random.nextBoolean
 
+  class Window {
 
+  }
   class Wall(building: Building) {
     val windowCount = rangeFrom(2, 4)
     val fireEscape = yesNo
+    def buildWindows():List[Window] = (for {
+      i <- 1 to windowCount
+    } yield new Window()).toList
+
     val store = oneIn(4, new Store())
+    val windows:List[Either[Option[Any], List[Window]]] = (for {
+      story <- 1 to building.stories
+    } yield {
+      if (story == 1 && store != None)
+        Left(store)
+      else
+        Right(buildWindows)
+      }).toList
     override def toString = "Windows: " + windowCount + " || Fire Escape: " + fireEscape
   }
 
